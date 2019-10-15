@@ -17,7 +17,7 @@ export default function InterviewerList({
       key={singleInterviewer.id}
       name={singleInterviewer.name}
       avatar={singleInterviewer.avatar}
-      selected={isSelected(value, singleInterviewer.id)}
+      selected={value && value.id === singleInterviewer.id}
       setInterviewer={(event) => onChange(singleInterviewer.id)}
     />
   });
