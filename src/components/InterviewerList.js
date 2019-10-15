@@ -9,15 +9,12 @@ export default function InterviewerList({
   onChange
 }) {
 
-  function isSelected(value, id) {
-    return value === id ? true : false;
-  }
   const mappedInterviewers = interviewers.map((singleInterviewer) => {
     return <InterviewerListItem
       key={singleInterviewer.id}
       name={singleInterviewer.name}
       avatar={singleInterviewer.avatar}
-      selected={value && value.id === singleInterviewer.id}
+      selected={value && value === singleInterviewer.id}
       setInterviewer={(event) => onChange(singleInterviewer.id)}
     />
   });
