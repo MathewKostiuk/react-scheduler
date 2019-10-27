@@ -59,7 +59,7 @@ export default function Application(props) {
   useEffect(() => {
     axios.get('/api/days')
     .then(response => setDays(response.data));
-  }, [])
+  }, []);
 
   const mappedAppointments = appointments.map((appointment) => {
     return <Appointment key={appointment.id} {...appointment} />
