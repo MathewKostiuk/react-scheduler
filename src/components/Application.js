@@ -38,10 +38,11 @@ export default function Application(props) {
     interview={interview}
     interviewers={interviewers}
     bookInterview={bookInterview}
+    deleteInterview={deleteInterview}
     />
   });
 
-  function bookInterview(id, interview) {
+  async function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
       interview: {...interview}
@@ -52,16 +53,40 @@ export default function Application(props) {
       [id]: appointment
     }
 
-    return axios.put(`/api/appointments/${id}`, { interview })
-      .then(() => {
-        setState({
-          ...state,
-          appointments
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      })
+    try {
+      await axios.put(`/api/appointments/${id}`, { interview });
+      setState({
+        ...state,
+        appointments
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function deleteInterview(id) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    try {
+      await axios.delete(`/api/appointments/${id}`);
+      setState({
+        ...state,
+        appointments
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
+
   }
 
   return (

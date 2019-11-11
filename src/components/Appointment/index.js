@@ -6,6 +6,7 @@ import Show from "./Show";
 import Empty from "./Empty";
 import Form from "./Form";
 import Status from './Status';
+import Confirm from './Confirm';
 
 import useVisualMode from '../../hooks/useVisualMode';
 
@@ -14,6 +15,7 @@ const SHOW = 'SHOW';
 const CREATE = 'CREATE';
 const SAVING = 'SAVING';
 const EDIT = 'EDIT';
+const CONFIRM = 'CONFIRM';
 
 
 
@@ -22,7 +24,8 @@ export default function Appointment ({
   id,
   interview,
   interviewers,
-  bookInterview
+  bookInterview,
+  deleteInterview
 }) {
 
   const { mode, transition, back} = useVisualMode(
@@ -54,6 +57,18 @@ export default function Appointment ({
     transition(EDIT);
   }
 
+  function onDelete() {
+    transition(SAVING);
+    deleteInterview(id)
+      .then(() => {
+        transition(EMPTY);
+      })
+  }
+
+  function onConfirm() {
+    transition(CONFIRM);
+  }
+
   return (
     <article id={id} className="appointment">
       <Header time={time}/>
@@ -63,6 +78,7 @@ export default function Appointment ({
           student={interview.student}
           interviewer={interview.interviewer}
           onEdit={onEdit}
+          onDelete={onConfirm}
         />
       )}
       {mode === CREATE && (
@@ -74,6 +90,12 @@ export default function Appointment ({
       )}
       {mode === SAVING && (
         <Status
+        />
+      )}
+      {mode === CONFIRM && (
+        <Confirm
+          onCancel={onCancel}
+          onConfirm={onDelete}
         />
       )}
     </article>
