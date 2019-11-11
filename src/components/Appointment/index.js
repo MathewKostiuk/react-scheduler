@@ -88,6 +88,15 @@ export default function Appointment ({
           onSave={onSave}
         />
       )}
+      {mode === EDIT && (
+        <Form
+          interviewers={interviewers}
+          onCancel={onCancel}
+          onSave={onSave}
+          name={interview.student}
+          interviewer={interview.interviewer.id}
+        />
+      )}
       {mode === SAVING && (
         <Status
         />
