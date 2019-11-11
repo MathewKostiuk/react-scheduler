@@ -21,26 +21,36 @@ export default function Appointment ({
   time,
   id,
   interview,
-  interviewers
+  interviewers,
+  bookInterview
 }) {
 
   const { mode, transition, back} = useVisualMode(
     interview ? SHOW : EMPTY
   );
 
-  const onAdd = () => {
+  function onAdd() {
     transition(CREATE);
   }
 
-  const onCancel = () => {
+  function onCancel() {
     back();
   }
 
-  const onSave = () => {
+  function onSave (name, interviewer) {
     transition(SAVING);
+    const interview = {
+      student: name,
+      interviewer
+    }
+
+    bookInterview(id, interview)
+      .then(() => {
+        transition(SHOW);
+      })
   }
 
-  const onEdit = () => {
+  function onEdit() {
     transition(EDIT);
   }
 

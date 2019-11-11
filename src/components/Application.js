@@ -34,10 +34,35 @@ export default function Application(props) {
     return <Appointment
     key={appointment.id}
     time={appointment.time}
+    id={appointment.id}
     interview={interview}
     interviewers={interviewers}
+    bookInterview={bookInterview}
     />
-  })
+  });
+
+  function bookInterview(id, interview) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: {...interview}
+    }
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    }
+
+    return axios.put(`/api/appointments/${id}`, { interview })
+      .then(() => {
+        setState({
+          ...state,
+          appointments
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }
 
   return (
     <main className="layout">
