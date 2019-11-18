@@ -53,16 +53,11 @@ export default function Application(props) {
       [id]: appointment
     }
 
-    try {
-      await axios.put(`/api/appointments/${id}`, { interview });
-      setState({
-        ...state,
-        appointments
-      });
-    }
-    catch (error) {
-      console.log(error);
-    }
+    await axios.put(`/api/appointments/${id}`, { interview });
+    setState({
+      ...state,
+      appointments
+    });
   }
 
   async function deleteInterview(id) {
@@ -76,17 +71,11 @@ export default function Application(props) {
       [id]: appointment
     };
 
-    try {
-      await axios.delete(`/api/appointments/${id}`);
-      setState({
-        ...state,
-        appointments
-      });
-    }
-    catch (error) {
-      console.log(error);
-    }
-
+    await axios.delete(`/api/appointments/${id}`);
+    setState({
+      ...state,
+      appointments
+    });
   }
 
   return (

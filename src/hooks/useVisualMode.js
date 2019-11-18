@@ -6,9 +6,9 @@ import { useState } from "react";
 
     function transition(newMode, replace = false) {
       setMode(newMode);
-      if (!replace) {
-        setHistory([...history, newMode]);
-      }
+      replace ?
+        setHistory(history => ([...history.slice(0, history.length - 1), newMode])) :
+        setHistory(history => ([...history, newMode]));
     }
 
     function back() {
