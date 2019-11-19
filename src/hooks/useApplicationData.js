@@ -13,6 +13,7 @@ export default function useApplicationData() {
   const SET_DAY = "SET_DAY";
   const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
   const SET_INTERVIEW = "SET_INTERVIEW";
+  const SET_SPOTS = "SET_SPOTS";
 
   const reducers = {
     [SET_DAY]: (state, { day }) => {
@@ -31,8 +32,18 @@ export default function useApplicationData() {
         ...state.appointments,
         [id]: appointment
       };
-      console.log(state, { id, interview });
       return { ...state, appointments }
+    },
+    [SET_SPOTS]: (state, { modifier }) => {
+      const days = state.days.map((item) => {
+        if (item.name !== state.day) {
+          return item;
+        } else {
+          item.spots += modifier;
+          return item;
+        }
+      })
+      return { ...state, days }
     }
   }
 
@@ -58,12 +69,14 @@ export default function useApplicationData() {
 
     await axios.put(`/api/appointments/${id}`, { interview });
     dispatch({ type: SET_INTERVIEW, id, interview });
+    dispatch({ type: SET_SPOTS, modifier: -1 });
   }
 
   async function deleteInterview(id) {
 
     await axios.delete(`/api/appointments/${id}`);
     dispatch({ type: SET_INTERVIEW, id, interview: null });
+    dispatch({ type: SET_SPOTS, modifier: 1 });
   }
 
   return { state, setDay, bookInterview, deleteInterview };
