@@ -34,15 +34,22 @@ export default function useApplicationData() {
       };
       return { ...state, appointments }
     },
-    [SET_SPOTS]: (state, { modifier }) => {
-      const days = state.days.map((item) => {
-        if (item.name !== state.day) {
-          return item;
+    [SET_SPOTS]: (state, { id }) => {
+      const days = state.days.map((day) => {
+        if (day.appointments.indexOf(id) > -1) {
+          let spotsRemaining = 0;
+          day.appointments.forEach((appointment) => {
+            if (state.appointments[appointment].interview === null) {
+              spotsRemaining++;
+            }
+          });
+          day.spots = spotsRemaining;
+          return day;
         } else {
-          item.spots += modifier;
-          return item;
+          return day;
         }
-      })
+      });
+
       return { ...state, days }
     }
   }
@@ -62,21 +69,36 @@ export default function useApplicationData() {
       axios.get('/api/interviewers')
     ]).then(([days, appointments, interviewers]) => {
       dispatch({ type: SET_APPLICATION_DATA, days: days.data, appointments: appointments.data, interviewers: interviewers.data });
-    })
+    });
+
+    const wss = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+
+    wss.onopen = () => {
+      wss.send(JSON.stringify('ping'));
+    }
+
+    wss.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+
+      if (data.type === 'SET_INTERVIEW') {
+        dispatch({ type: SET_INTERVIEW, id: data.id, interview: data.interview });
+        dispatch({ type: SET_SPOTS, id: data.id });
+      }
+    }
   }, []);
 
   async function bookInterview(id, interview) {
 
     await axios.put(`/api/appointments/${id}`, { interview });
     dispatch({ type: SET_INTERVIEW, id, interview });
-    dispatch({ type: SET_SPOTS, modifier: -1 });
+    dispatch({ type: SET_SPOTS, id });
   }
 
   async function deleteInterview(id) {
 
     await axios.delete(`/api/appointments/${id}`);
     dispatch({ type: SET_INTERVIEW, id, interview: null });
-    dispatch({ type: SET_SPOTS, modifier: 1 });
+    dispatch({ type: SET_SPOTS, id });
   }
 
   return { state, setDay, bookInterview, deleteInterview };
