@@ -90,7 +90,6 @@ export default function useApplicationData() {
   }, []);
 
   async function bookInterview(id, interview) {
-
     try {
       await axios.put(`/api/appointments/${id}`, { interview });
       dispatch({ type: SET_INTERVIEW, id, interview });
@@ -101,7 +100,6 @@ export default function useApplicationData() {
   }
 
   async function deleteInterview(id) {
-
     try {
       await axios.delete(`/api/appointments/${id}`);
       dispatch({ type: SET_INTERVIEW, id, interview: null });

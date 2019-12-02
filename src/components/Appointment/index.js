@@ -20,8 +20,6 @@ const CONFIRM = 'CONFIRM';
 const ERROR_SAVE = 'ERROR_SAVE';
 const ERROR_DELETE = 'ERROR_DELETE';
 
-// comment
-
 export default function Appointment ({
   time,
   id,
