@@ -20,7 +20,9 @@ export default function InterviewerListItem({
     <li className={interviewerListItemClass}
         key={id}
         selected={selected}
-        onClick={setInterviewer}>
+        onClick={setInterviewer}
+        data-testid="interviewer-list-item"
+    >
       <img
         className="interviewers__item-image"
         src={avatar}

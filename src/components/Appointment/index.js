@@ -78,7 +78,7 @@ export default function Appointment ({
   }, [interview, transition, mode]);
 
   return (
-    <article id={id} className="appointment">
+    <article id={id} className="appointment" data-testid="appointment">
       <Header time={time}/>
       {mode === EMPTY && <Empty onAdd={onAdd} />}
       {mode === SHOW && interview && (
@@ -107,6 +107,7 @@ export default function Appointment ({
       )}
       {mode === SAVING && (
         <Status
+          message="Saving"
         />
       )}
       {mode === CONFIRM && (
