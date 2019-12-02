@@ -69,7 +69,9 @@ export default function useApplicationData() {
       axios.get('/api/interviewers')
     ]).then(([days, appointments, interviewers]) => {
       dispatch({ type: SET_APPLICATION_DATA, days: days.data, appointments: appointments.data, interviewers: interviewers.data });
-    });
+    }).catch((error) => {
+      return;
+    })
 
     const wss = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
 
@@ -89,16 +91,24 @@ export default function useApplicationData() {
 
   async function bookInterview(id, interview) {
 
-    await axios.put(`/api/appointments/${id}`, { interview });
-    dispatch({ type: SET_INTERVIEW, id, interview });
-    dispatch({ type: SET_SPOTS, id });
+    try {
+      await axios.put(`/api/appointments/${id}`, { interview });
+      dispatch({ type: SET_INTERVIEW, id, interview });
+      dispatch({ type: SET_SPOTS, id });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function deleteInterview(id) {
 
-    await axios.delete(`/api/appointments/${id}`);
-    dispatch({ type: SET_INTERVIEW, id, interview: null });
-    dispatch({ type: SET_SPOTS, id });
+    try {
+      await axios.delete(`/api/appointments/${id}`);
+      dispatch({ type: SET_INTERVIEW, id, interview: null });
+      dispatch({ type: SET_SPOTS, id });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return { state, setDay, bookInterview, deleteInterview };
